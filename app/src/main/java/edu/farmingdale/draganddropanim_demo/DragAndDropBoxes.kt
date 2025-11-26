@@ -4,6 +4,7 @@ package edu.farmingdale.draganddropanim_demo
 
 import android.content.ClipData
 import android.content.ClipDescription
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -50,6 +51,7 @@ import androidx.compose.ui.draganddrop.mimeTypes
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -61,109 +63,116 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun DragAndDropBoxes(modifier: Modifier = Modifier) {
     var isPlaying by remember { mutableStateOf(true) }
-    Column(modifier = Modifier.fillMaxSize()) {
+    val config= LocalConfiguration.current
+    if(config.orientation== Configuration.ORIENTATION_LANDSCAPE) {
+        Column(modifier = Modifier.fillMaxSize()) {
 
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .weight(0.2f)
-        ) {
-            val boxCount = 4
-            var dragBoxIndex by remember {
-                mutableIntStateOf(0)
-            }
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .weight(0.2f)
+            ) {
+                val boxCount = 4
+                var dragBoxIndex by remember {
+                    mutableIntStateOf(0)
+                }
 
-            repeat(boxCount) { index ->
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .padding(10.dp)
-                        .border(1.dp, Color.Black)
-                        .dragAndDropTarget(
-                            shouldStartDragAndDrop = { event ->
-                                event
-                                    .mimeTypes()
-                                    .contains(ClipDescription.MIMETYPE_TEXT_PLAIN)
-                            },
-                            target = remember {
-                                object : DragAndDropTarget {
-                                    override fun onDrop(event: DragAndDropEvent): Boolean {
-                                        isPlaying = !isPlaying
-                                        dragBoxIndex = index
-                                        return true
+                repeat(boxCount) { index ->
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .padding(10.dp)
+                            .border(1.dp, Color.Black)
+                            .dragAndDropTarget(
+                                shouldStartDragAndDrop = { event ->
+                                    event
+                                        .mimeTypes()
+                                        .contains(ClipDescription.MIMETYPE_TEXT_PLAIN)
+                                },
+                                target = remember {
+                                    object : DragAndDropTarget {
+                                        override fun onDrop(event: DragAndDropEvent): Boolean {
+                                            isPlaying = !isPlaying
+                                            dragBoxIndex = index
+                                            return true
+                                        }
                                     }
                                 }
-                            }
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    this@Row.AnimatedVisibility(
-                        visible = index == dragBoxIndex,
-                        enter = scaleIn() + fadeIn(),
-                        exit = scaleOut() + fadeOut()
+                            ),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            imageVector=Icons.Default.PlayArrow,
-                            contentDescription = "Right",
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .dragAndDropSource {
-                                    detectTapGestures(
-                                        onLongPress = { offset ->
-                                            startTransfer(
-                                                transferData = DragAndDropTransferData(
-                                                    clipData = ClipData.newPlainText(
-                                                        "text",
-                                                        ""
+                        this@Row.AnimatedVisibility(
+                            visible = index == dragBoxIndex,
+                            enter = scaleIn() + fadeIn(),
+                            exit = scaleOut() + fadeOut()
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.PlayArrow,
+                                contentDescription = "Right",
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .dragAndDropSource {
+                                        detectTapGestures(
+                                            onLongPress = { offset ->
+                                                startTransfer(
+                                                    transferData = DragAndDropTransferData(
+                                                        clipData = ClipData.newPlainText(
+                                                            "text",
+                                                            ""
+                                                        )
                                                     )
                                                 )
-                                            )
-                                        }
-                                    )
-                                }
-                        )
+                                            }
+                                        )
+                                    }
+                            )
+                        }
                     }
                 }
             }
-        }
 
 
-        val pOffset by animateIntOffsetAsState(
-            targetValue = when (isPlaying) {
-                true -> IntOffset(130, 300)
-                false -> IntOffset(130, 100)
-            },
-            animationSpec = tween(3000, easing = LinearEasing)
-        )
-
-        val rtatView by animateFloatAsState(
-            targetValue = if (isPlaying) 360f else 0.0f,
-            // Configure the animation duration and easing.
-            animationSpec = repeatable(
-                iterations = if (isPlaying) 10 else 1,
-                tween(durationMillis = 3000, easing = LinearEasing),
-                repeatMode = RepeatMode.Restart
+            val pOffset by animateIntOffsetAsState(
+                targetValue = when (isPlaying) {
+                    true -> IntOffset(130, 300)
+                    false -> IntOffset(130, 100)
+                },
+                animationSpec = tween(3000, easing = LinearEasing)
             )
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.8f)
-                .background(Color.Red)
-        ) {
-            //Icon(
-               // imageVector = Icons.Default.Face,
+
+            val rtatView by animateFloatAsState(
+                targetValue = if (isPlaying) 360f else 0.0f,
+                // Configure the animation duration and easing.
+                animationSpec = repeatable(
+                    iterations = if (isPlaying) 10 else 1,
+                    tween(durationMillis = 3000, easing = LinearEasing),
+                    repeatMode = RepeatMode.Restart
+                )
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.8f)
+                    .background(Color.Red)
+            ) {
+                //Icon(
+                // imageVector = Icons.Default.Face,
                 //contentDescription = "Face",
-               Box(modifier=Modifier.size(30.dp).drawBehind{
-                   drawRect(color=Color.Blue, size=this.size)}){
-               }
+                Box(modifier = Modifier.size(30.dp).drawBehind {
+                    drawRect(color = Color.Blue, size = this.size)
+                }) {
+                }
                 //modifier = Modifier
-                  //  .padding(10.dp)
-                    //.offset(pOffset.x.dp, pOffset.y.dp)
-                    //.rotate(rtatView)
-            //)
+                //  .padding(10.dp)
+                //.offset(pOffset.x.dp, pOffset.y.dp)
+                //.rotate(rtatView)
+                //)
+            }
         }
     }
+    //else{
+      //  Text("This app is only available in landscape mode")
+    //}
 }
 
