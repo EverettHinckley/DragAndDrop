@@ -67,6 +67,8 @@ import androidx.compose.ui.unit.sp
 fun DragAndDropBoxes(modifier: Modifier = Modifier) {
     var isPlaying by remember { mutableStateOf(true) }
     val config= LocalConfiguration.current
+    var xTo by remember { mutableStateOf(800) }
+    var yTo by remember { mutableStateOf(300) }
     if(config.orientation== Configuration.ORIENTATION_LANDSCAPE) {
         Column(modifier = Modifier.fillMaxSize()) {
 
@@ -80,6 +82,18 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
                     mutableIntStateOf(0)
                 }
 
+                if(dragBoxIndex==0){
+                    xTo=800
+                }
+                else if(dragBoxIndex==1){
+                    yTo=0
+                }
+                else if(dragBoxIndex==2){
+                    xTo=0
+                }
+                else{
+                    yTo=300
+                }
                 repeat(boxCount) { index ->
                     Box(
                         modifier = Modifier
@@ -96,7 +110,8 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
                                 target = remember {
                                     object : DragAndDropTarget {
                                         override fun onDrop(event: DragAndDropEvent): Boolean {
-                                            isPlaying = !isPlaying
+                                            //isPlaying = !isPlaying
+                                            isPlaying=false
                                             dragBoxIndex = index
                                             return true
                                         }
@@ -119,6 +134,7 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
                                         detectTapGestures(
                                             onLongPress = { offset ->
                                                 startTransfer(
+
                                                     transferData = DragAndDropTransferData(
                                                         clipData = ClipData.newPlainText(
                                                             "text",
@@ -135,13 +151,10 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
                 }
             }
 
-            var x by remember { mutableStateOf(400.dp) }
-            var y by remember{mutableStateOf(150.dp)}
-
             val pOffset by animateIntOffsetAsState(
                 targetValue = when (isPlaying) {
                     true -> IntOffset(400, 150)
-                    false -> IntOffset(800, 300)
+                    false -> IntOffset(xTo, yTo)
                 },
                 animationSpec = tween(3000, easing = LinearEasing)
             )
