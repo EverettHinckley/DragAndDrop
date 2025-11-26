@@ -134,11 +134,13 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
                 }
             }
 
+            var x by remember { mutableStateOf(400.dp) }
+            var y by remember{mutableStateOf(150.dp)}
 
             val pOffset by animateIntOffsetAsState(
                 targetValue = when (isPlaying) {
-                    true -> IntOffset(130, 300)
-                    false -> IntOffset(130, 100)
+                    true -> IntOffset(400, 150)
+                    false -> IntOffset(800, 300)
                 },
                 animationSpec = tween(3000, easing = LinearEasing)
             )
@@ -161,8 +163,7 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
                 //Icon(
                 // imageVector = Icons.Default.Face,
                 //contentDescription = "Face",
-
-                Box(modifier = Modifier.size(30.dp).offset(400.dp, 150.dp).rotate(rtatView).drawBehind {
+                Box(modifier = Modifier.size(30.dp).offset(pOffset.x.dp, pOffset.y.dp).rotate(rtatView).drawBehind {
                         drawRect(color = Color.Blue, size = this.size)
                 }) {
                 }
