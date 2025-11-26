@@ -50,7 +50,9 @@ import androidx.compose.ui.draganddrop.DragAndDropTransferData
 import androidx.compose.ui.draganddrop.mimeTypes
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
@@ -159,8 +161,9 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
                 //Icon(
                 // imageVector = Icons.Default.Face,
                 //contentDescription = "Face",
-                Box(modifier = Modifier.size(30.dp).drawBehind {
-                    drawRect(color = Color.Blue, size = this.size)
+
+                Box(modifier = Modifier.size(30.dp).offset(400.dp, 150.dp).rotate(rtatView).drawBehind {
+                        drawRect(color = Color.Blue, size = this.size)
                 }) {
                 }
                 //modifier = Modifier
