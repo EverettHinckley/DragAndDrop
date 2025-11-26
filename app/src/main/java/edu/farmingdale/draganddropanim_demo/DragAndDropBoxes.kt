@@ -34,6 +34,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -160,6 +161,7 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
                     .weight(0.8f)
                     .background(Color.Red)
             ) {
+                Button(onClick={isPlaying=true}){Text("Reset")}
                 //Icon(
                 // imageVector = Icons.Default.Face,
                 //contentDescription = "Face",
