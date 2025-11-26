@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.Icon
@@ -45,6 +46,7 @@ import androidx.compose.ui.draganddrop.DragAndDropEvent
 import androidx.compose.ui.draganddrop.DragAndDropTarget
 import androidx.compose.ui.draganddrop.DragAndDropTransferData
 import androidx.compose.ui.draganddrop.mimeTypes
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -152,14 +154,17 @@ fun DragAndDropBoxes(modifier: Modifier = Modifier) {
                 .weight(0.8f)
                 .background(Color.Red)
         ) {
-            Icon(
-                imageVector = Icons.Default.Face,
-                contentDescription = "Face",
-                modifier = Modifier
-                    .padding(10.dp)
-                    .offset(pOffset.x.dp, pOffset.y.dp)
-                    .rotate(rtatView)
-            )
+            //Icon(
+               // imageVector = Icons.Default.Face,
+                //contentDescription = "Face",
+               Box(modifier=Modifier.size(30.dp).drawBehind{
+                   drawRect(color=Color.Blue, size=this.size)}){
+               }
+                //modifier = Modifier
+                  //  .padding(10.dp)
+                    //.offset(pOffset.x.dp, pOffset.y.dp)
+                    //.rotate(rtatView)
+            //)
         }
     }
 }
